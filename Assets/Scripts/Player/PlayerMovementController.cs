@@ -8,13 +8,13 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float _playerRotationSpeed;
     [SerializeField] private float _playerAccelerationSpeed;
     [SerializeField] private Camera _playerCamera;
-    private UiInput _inputReader;
+    private ExternalDevicesInputReader _inputReader;
     private Rigidbody _playerRB;
     private Vector3 _movementDirection;
 
     private void Start()
     {
-        _inputReader = GetComponent<UiInput>();
+        _inputReader = GetComponent<ExternalDevicesInputReader>();
 
         _playerRB = GetComponent<Rigidbody>();
     }
