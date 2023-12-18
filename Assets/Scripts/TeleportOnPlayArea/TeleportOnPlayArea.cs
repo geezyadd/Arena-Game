@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -68,5 +65,9 @@ public class TeleportOnPlayArea : MonoBehaviour
             OnTeleport.Invoke();
             transform.position = GetRandomPointFarFromEnemies(_distanceFromEnemy);
         }
+    }
+    private void OnDestroy()
+    {
+        OnTeleport.RemoveAllListeners();
     }
 }

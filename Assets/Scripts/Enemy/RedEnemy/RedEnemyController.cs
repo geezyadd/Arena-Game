@@ -1,11 +1,11 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using static UnityEngine.UI.ScrollRect;
+using UnityEngine.Events;
 
-public class RedEnemyController : MonoBehaviour, IDamagable
+public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
 {
+    StatsAddedEvent statsAddedEvent = new StatsAddedEvent();
     [SerializeField] private float _health;
     [SerializeField] private float _damage;
     [SerializeField] private float _flyDistance;
@@ -13,8 +13,14 @@ public class RedEnemyController : MonoBehaviour, IDamagable
     [SerializeField] private float _startFlySpeed;
     [SerializeField] private float _endFlySpeed;
     [SerializeField] private GameObject _redEnemyMesh;
-    private GameObject _player;
+    [SerializeField] private float _bounty;
+    public event Action OnEnemyDestroyed;
+    [SerializeField] private GameObject _player;
     private bool _isFlying = true;
+    public void AddBountyAddedEventListener(UnityAction<float> listener)
+    {
+        statsAddedEvent.AddListener(listener);
+    }
     public bool TakeDamage(float damageAmount)
     {
         _health -= damageAmount;
@@ -33,10 +39,12 @@ public class RedEnemyController : MonoBehaviour, IDamagable
     }
     private void Death()
     {
+        statsAddedEvent?.Invoke(_bounty); 
         Destroy(gameObject);
     }
     private void Start()
     {
+        StatsEventManager.AddEventInvoker(this);
         _player = GameObject.Find("Player");
     }
     private void Update()
@@ -82,6 +90,9 @@ public class RedEnemyController : MonoBehaviour, IDamagable
             Destroy(gameObject);
         }
     }
-
-
+    private void OnDestroy()
+    {
+        OnEnemyDestroyed?.Invoke();
+        statsAddedEvent.RemoveAllListeners();
+    }
 }

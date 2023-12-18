@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class BlueEnemyBulletController : MonoBehaviour
 {
     
     [SerializeField] private float _bulletSpeed;
-    private GameObject _player;
     [SerializeField] private float _bulletStrengthDamage;
     [SerializeField] private Vector3 _target;
     [SerializeField] private bool _isPlayerTeleported = false;
+    private GameObject _player;
     public void SetBulletDamage(float bulletDamage) 
     {
         _bulletStrengthDamage = bulletDamage;
@@ -22,11 +20,19 @@ public class BlueEnemyBulletController : MonoBehaviour
         TeleportOnPlayArea.Instance.OnTeleport.AddListener(SetIsPlayerTeleported);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!_isPlayerTeleported) 
         {
             _target = _player.transform.position;
+        }
+        else 
+        {
+            Collider collider = GetComponent<Collider>();
+            if (collider != null)
+            {
+                collider.enabled = false; 
+            }
         }
         Movement(_target);
         TargetRiched();
@@ -51,7 +57,9 @@ public class BlueEnemyBulletController : MonoBehaviour
     }
     private void TargetRiched() 
     {
-        if(transform.position == _target) 
+        Vector3 bulletPosition = new Vector3((float)Math.Round(transform.position.x, 1), (float)Math.Round(transform.position.y, 0), (float)Math.Round(transform.position.z, 1));
+        Vector3 playerLastPosition = new Vector3((float)Math.Round(_target.x, 1), (float)Math.Round(_target.y, 0), (float)Math.Round(_target.z, 1));
+        if (bulletPosition == playerLastPosition)
         {
             DestroyBullet();
         }

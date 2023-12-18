@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ExternalDevicesInputReader : MonoBehaviour
@@ -7,6 +5,7 @@ public class ExternalDevicesInputReader : MonoBehaviour
     private float _horizontalInput;
     private float _verticalInput;
     public bool Attack { get; private set; }
+    public bool Ultimate { get; private set; }
     public float GetHorizontalInput() { return _horizontalInput; }
     public float GetVerticalInput() { return _verticalInput; }
 
@@ -14,11 +13,23 @@ public class ExternalDevicesInputReader : MonoBehaviour
     {
         InputSeter();
         MouseInput();
+        SetUltimate();
     }
     private void InputSeter()
     {
         _horizontalInput = NormalizedInput("Horizontal");
         _verticalInput = NormalizedInput("Vertical");
+    }
+    private void SetUltimate() 
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) 
+        {
+            Ultimate = true;
+        }
+        else 
+        {
+            Ultimate = false;
+        }
     }
 
     private int NormalizedInput(string Direction)

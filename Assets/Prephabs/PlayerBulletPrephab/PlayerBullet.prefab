@@ -130,7 +130,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _ricochetRadius: 5
-  _ricochetSpeed: 20
+  _ricochetSpeed: 40
+  _chanceRicochet: 0.3
 --- !u!135 &2863371740796143257
 SphereCollider:
   m_ObjectHideFlags: 0

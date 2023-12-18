@@ -1,10 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable
+public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable, IBounty
 {
+    StatsAddedEvent statsAddedEvent = new StatsAddedEvent();
     [SerializeField] private float _ñurrentHealth;
+    [SerializeField] private float _bounty;
+    public event Action OnEnemyDestroyed;
     public bool TakeDamage(float damageAmount)
     {
         _ñurrentHealth -= damageAmount;
@@ -13,6 +16,14 @@ public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable
             return true;
         }
         return false;
+    }
+    public void AddBountyAddedEventListener(UnityAction<float> listener)
+    {
+        statsAddedEvent.AddListener(listener);
+    }
+    private void Start()
+    {
+        StatsEventManager.AddEventInvoker(this);
     }
     private void Update()
     {
@@ -27,6 +38,14 @@ public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable
     }
     private void Death() 
     {
+        //OnEnemyDestroyed?.Invoke();
+        statsAddedEvent?.Invoke(_bounty);
         Destroy(gameObject);
     }
+    private void OnDestroy()
+    {
+        OnEnemyDestroyed?.Invoke();
+        statsAddedEvent.RemoveAllListeners();
+    }
+   
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 namespace BlueEnemy 
 {
@@ -17,7 +16,7 @@ namespace BlueEnemy
         }
         private void Update()
         {
-            //Shoot();
+            Shoot();
         }
 
         private void IsPlayerInVisionSet(bool value) 
@@ -50,8 +49,6 @@ namespace BlueEnemy
             BlueEnemyBulletController bulletController = bullet.GetComponent<BlueEnemyBulletController>();
             bulletController.SetBulletDamage(_bulletStrengthDamage);
         }
-
-
     }
 
 }

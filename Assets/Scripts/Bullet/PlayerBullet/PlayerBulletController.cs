@@ -1,9 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerBulletController : MonoBehaviour
 {
+    StatsRicochetAddedEvent statsRicochetAddedEvent = new StatsRicochetAddedEvent();
     [SerializeField] private float _bulletForce;
     [SerializeField] private LayerMask _enemyLayer;
     [SerializeField] private float _ricochetRadius;
@@ -16,14 +17,20 @@ public class PlayerBulletController : MonoBehaviour
     private GameObject _ricochetTarget;
     private float _ricochetCounter = 0;
     private bool _isBulletKillEnemy = false;
-
+    private float _chanceRicochet;
     public void SetBulletDamage(float bulletDamage)
     {
         _bulletDamage = bulletDamage;
     }
+    public void AddBountyAddedEventListener(UnityAction listener)
+    {
+        statsRicochetAddedEvent.AddListener(listener);
+    }
 
     private void Start()
     {
+        StartCoroutine(DestroyBulletAfter10Seconds());
+        StatsRicochetAddedEventManager.AddEventInvoker(this);
         _camera = Camera.main;
         _fireDirection = _camera.transform.forward;
         _bulletRB = GetComponent<Rigidbody>();
@@ -35,17 +42,34 @@ public class PlayerBulletController : MonoBehaviour
         _bulletRB.velocity = fireDirection * bulletForce;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         RicochetMove();
+        ChanceRicochet();
     }
     private void RicochetMove() 
     {
-        if (_isRicochet)
+
+        if (_isRicochet && _ricochetTarget != null)
         {
             float step = _ricochetSpeed * Time.deltaTime;
             Vector3 newPosition = Vector3.MoveTowards(transform.position, _ricochetTarget.transform.position, step);
             _bulletRB.MovePosition(newPosition);
+        }
+        else if(_isRicochet && _ricochetTarget == null) 
+        {
+            Destroy(gameObject);
+        }
+    }
+    private void ChanceRicochet() 
+    {
+        if (PlayerStats.Instance.GetIsPlayerLowHp()) 
+        {
+            _chanceRicochet = 1f;
+        }
+        else 
+        {
+            _chanceRicochet = 0.3f;
         }
     }
 
@@ -53,50 +77,52 @@ public class PlayerBulletController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            //Debug.Log(collision.gameObject.name);
             IDamagable enemy = collision.collider.GetComponent<IDamagable>();
-            _isBulletKillEnemy = enemy.TakeDamage(_bulletDamage); //damage
+            _isBulletKillEnemy = enemy.TakeDamage(_bulletDamage);
             float chance = Random.value;
-            float chanceRicochet = 0.3f;
             Collider[] nearbyEnemies = Physics.OverlapSphere(transform.position, _ricochetRadius);
-            if (chance < chanceRicochet && !_isRicochet && nearbyEnemies.Length != 0)
+            if (chance < _chanceRicochet && !_isRicochet && nearbyEnemies.Length != 0)
             {
-                _isRicochet = true;
                 _bulletRB.velocity = Vector3.zero;
                 _bulletRB.useGravity = false;
                 foreach (Collider enemyCollider in nearbyEnemies)
                 {
-                    if (enemyCollider.CompareTag("Enemy"))
+                    if (enemyCollider.CompareTag("Enemy") && enemyCollider.gameObject != collision.gameObject)
                     {
-                        //if(enemyCollider.gameObject == collision.gameObject) 
-                        //{
-                        //    continue;
-                        //}
-                        if(enemyCollider.gameObject != collision.gameObject)
-                        {
-                            _ricochetTarget = enemyCollider.gameObject;
-                            _ricochetCounter += 1;
-                        }
-                        else 
-                        {
-                            Destroy(gameObject);
-                        }
+                        _ricochetTarget = enemyCollider.gameObject;
+                        _ricochetCounter += 1;
+                        _isRicochet = true;
+                        break; 
                     }
+                }
+                if (!_isRicochet)
+                {
+                    Destroy(gameObject);
                 }
             }
             else if(_ricochetCounter >= 1) 
             {
+                if (_isBulletKillEnemy) 
+                { 
+                    statsRicochetAddedEvent?.Invoke();
+                }
                 _isRicochet = false;
                 _bulletRB.useGravity = true;
-                //_isBulletKillEnemy = enemy.TakeDamage(_bulletDamage);
                 Destroy(gameObject);
             }
             else 
             {
                 Destroy(gameObject);
             }
-
-
         }
+    }
+    IEnumerator DestroyBulletAfter10Seconds()
+    {
+        yield return new WaitForSeconds(10);
+        Destroy(gameObject);
+    }
+    private void OnDestroy()
+    {
+        statsRicochetAddedEvent.RemoveAllListeners();
     }
 }

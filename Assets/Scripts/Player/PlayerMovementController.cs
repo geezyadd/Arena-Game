@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
@@ -7,19 +8,28 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float _playerRotationSpeed;
     [SerializeField] private float _playerAccelerationSpeed;
     [SerializeField] private Camera _playerCamera;
-    private ExternalDevicesInputReader _inputReader;
+    private UiInput _inputReader;
     private Rigidbody _playerRB;
     private Vector3 _movementDirection;
 
     private void Start()
     {
-        _inputReader = GetComponent<ExternalDevicesInputReader>();
+        _inputReader = GetComponent<UiInput>();
+
         _playerRB = GetComponent<Rigidbody>();
     }
+    
 
     private void FixedUpdate()
     {
-        PlayerRotation(_playerCamera.transform.forward.normalized); 
+        if(_inputReader.GetVerticalInput() != 0 && _inputReader.GetHorizontalInput() != 0) 
+        {
+            Debug.Log("ver");
+            Debug.Log(_inputReader.GetVerticalInput());
+            Debug.Log("hor");
+            Debug.Log(_inputReader.GetHorizontalInput());
+        }
+        
         Movement();
         MovementDirection();
     }
@@ -27,10 +37,6 @@ public class PlayerMovementController : MonoBehaviour
     private void Movement()
     {
         _playerRB.MovePosition(transform.position + (_playerAccelerationSpeed * Time.deltaTime * (_movementDirection)));
-    }
-    private void PlayerRotation(Vector3 rotateDirection)
-    {
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(rotateDirection.x, 0, rotateDirection.z)), _playerRotationSpeed * Time.deltaTime);
     }
     private void MovementDirection() 
     {

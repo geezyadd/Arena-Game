@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraControll : MonoBehaviour
@@ -17,16 +15,14 @@ public class CameraControll : MonoBehaviour
     {
         CameraMove();
     }
+    
     private void CameraMove() 
     {
-        // Получаем ввод от мыши
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-
-        // Вращаем персонажа в горизонтальной плоскости
+    
         transform.parent.Rotate(Vector3.up * mouseX * _sensitivity);
-
-        // Вращаем камеру в вертикальной плоскости
+    
         rotationX -= mouseY * _sensitivity;
         rotationX = Mathf.Clamp(rotationX, -_maxYAngle, _maxYAngle);
         transform.localRotation = Quaternion.Euler(rotationX, 0.0f, 0.0f);
