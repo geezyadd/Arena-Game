@@ -15,21 +15,12 @@ public class PlayerMovementController : MonoBehaviour
     private void Start()
     {
         _inputReader = GetComponent<ExternalDevicesInputReader>();
-
         _playerRB = GetComponent<Rigidbody>();
     }
     
 
     private void FixedUpdate()
     {
-        if(_inputReader.GetVerticalInput() != 0 && _inputReader.GetHorizontalInput() != 0) 
-        {
-            Debug.Log("ver");
-            Debug.Log(_inputReader.GetVerticalInput());
-            Debug.Log("hor");
-            Debug.Log(_inputReader.GetHorizontalInput());
-        }
-        
         Movement();
         MovementDirection();
     }
