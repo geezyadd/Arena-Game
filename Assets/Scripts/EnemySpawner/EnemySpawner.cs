@@ -1,19 +1,33 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using Unity.AI.Navigation;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _blueEnemyPrefab;
     [SerializeField] private GameObject _redEnemyPrefab;
     private NavMeshSurface _navMeshSurface;
-
-    private float _spawnInterval = 10f;
+    private float _spawnInterval = 10f; 
     private float _minSpawnInterval = 6f;
     [SerializeField] private int _enemyCounter = 0;
     [SerializeField] private int _maxEnemyInScene;
+    [SerializeField] private List<GameObject> _enemyPool = new List<GameObject>();
 
+    
+    public void DisableAllActiveEnemies()
+    {
+        foreach (GameObject enemy in _enemyPool)
+        {
+            if (enemy != null && enemy.activeSelf)
+            {
+                enemy.SetActive(false);
+            }
+        }
+    }
     private void Start()
     {
         _navMeshSurface = FindObjectOfType<NavMeshSurface>();
@@ -34,25 +48,54 @@ public class EnemySpawner : MonoBehaviour
                 {   
                     SpawnEnemy(_blueEnemyPrefab, 1);
                     SpawnEnemy(_redEnemyPrefab, 4);
-                    _enemyCounter += 5;
                 }
         }
     }
+    private GameObject GetEnemy(GameObject enemyPrefab)
+    {
+        GameObject pooledEnemy = _enemyPool.Find(enemy => enemy.activeSelf == false && enemy.CompareTag(enemyPrefab.tag));
+
+        if (pooledEnemy == null)
+        {
+            pooledEnemy = Instantiate(enemyPrefab);
+            _enemyPool.Add(pooledEnemy);
+            
+        }
+        if(pooledEnemy != null)
+        {
+            pooledEnemy.SetActive(true);
+        }
+        return pooledEnemy;
+    }
+
+    private void Update()
+    {
+        _enemyCounter = CountActiveEnemies(_enemyPool);
+    }
+
+    private int CountActiveEnemies(List<GameObject> objectList)
+    {
+        int activeCount = 0;
+
+        foreach (GameObject obj in objectList)
+        {
+            if (obj != null && obj.activeSelf)
+            {
+                activeCount++;
+            }
+        }
+
+        return activeCount;
+    }
+
+    
 
     private void SpawnEnemy(GameObject enemyPrefab, int ratio)
     {
         for (int i = 0; i < ratio; i++)
         {
-            Vector3 spawnPoint = GetRandomSpawnPoint();
-            GameObject newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
-            if(enemyPrefab == _blueEnemyPrefab) 
-            {
-                newEnemy.GetComponent<BlueEnemyHealthLogic>().OnEnemyDestroyed += DecreaseEnemyCount;
-            }
-            if(enemyPrefab == _redEnemyPrefab) 
-            {
-                newEnemy.GetComponent<RedEnemyController>().OnEnemyDestroyed += DecreaseEnemyCount;
-            }
+            GameObject newEnemy = GetEnemy(enemyPrefab);
+            newEnemy.transform.position = GetRandomSpawnPoint();
         }
         
     }
@@ -74,8 +117,5 @@ public class EnemySpawner : MonoBehaviour
 
         return hit.position;
     }
-    private void DecreaseEnemyCount() 
-    {
-        _enemyCounter --;
-    }
+    
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CameraControll : MonoBehaviour
 {
-    [SerializeField] private float _sensitivity; // Чувствительность мыши
-    [SerializeField] private float _maxYAngle; // Максимальный угол вращения по вертикали
+    [SerializeField] private float _sensitivity; // Р§СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚СЊ РјС‹С€Рё
+    [SerializeField] private float _maxYAngle; // РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СѓРіРѕР» РІСЂР°С‰РµРЅРёСЏ РїРѕ РІРµСЂС‚РёРєР°Р»Рё
 
     private float rotationX = 0.0f;
     private void Start()
