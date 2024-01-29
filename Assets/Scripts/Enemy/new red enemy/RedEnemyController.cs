@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
 {
     StatsAddedEvent statsAddedEvent = new StatsAddedEvent();
+    private float _currentHealth;
     [SerializeField] private float _health;
     [SerializeField] private float _damage;
     [SerializeField] private float _flyDistance;
@@ -14,7 +16,6 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
     [SerializeField] private float _endFlySpeed;
     [SerializeField] private GameObject _redEnemyMesh;
     [SerializeField] private float _bounty;
-    public event Action OnEnemyDestroyed;
     [SerializeField] private GameObject _player;
     private bool _isFlying = true;
     public void AddBountyAddedEventListener(UnityAction<float> listener)
@@ -23,16 +24,23 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
     }
     public bool TakeDamage(float damageAmount)
     {
-        _health -= damageAmount;
-        if (_health <= 0)
+        _currentHealth -= damageAmount;
+        if (_currentHealth <= 0)
         {
             return true;
         }
         return false;
     }
+
+    private void OnEnable()
+    {
+        _currentHealth = _health;
+        _isFlying = true;
+    }
+
     private void HealthChecker()
     {
-        if (_health < 0 || _health == 0)
+        if (_currentHealth < 0 || _currentHealth == 0)
         {
             Death();
         }
@@ -40,12 +48,13 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
     private void Death()
     {
         statsAddedEvent?.Invoke(_bounty); 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
     private void Start()
     {
         StatsEventManager.AddEventInvoker(this);
         _player = GameObject.Find("Player");
+        _currentHealth = _health;
     }
     private void Update()
     {
@@ -58,7 +67,11 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
         }
         if(_isFlying == false) 
         {
-            StartCoroutine(MoveToPlayerCoroutine(_airTimeDelay));
+            if(gameObject.activeSelf)
+            {
+                StartCoroutine(MoveToPlayerCoroutine(_airTimeDelay));
+            }
+            
         }
     }
     
@@ -86,13 +99,13 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
     {
         if(collision.gameObject.tag == "Player")
         {
-            collision.collider.gameObject.GetComponent<IDamagable>().TakeDamage(_damage);
-            Destroy(gameObject);
+            collision.collider.gameObject.GetComponent<IDamagable>().TakeDamage(_damage); 
+            gameObject.SetActive(false);
         }
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
-        OnEnemyDestroyed?.Invoke();
         statsAddedEvent.RemoveAllListeners();
+        StopAllCoroutines();
     }
 }

@@ -42,7 +42,7 @@ public class BlueEnemyBulletController : MonoBehaviour
         if (collision.collider.gameObject.name == "Player") 
         {
             collision.collider.gameObject.GetComponent<IStrengthDamageble>().TakeStrengthDamage(_bulletStrengthDamage);
-            DestroyBullet();
+            DisableBullet();
         }
     }
     private void Movement(Vector3 position) 
@@ -61,11 +61,11 @@ public class BlueEnemyBulletController : MonoBehaviour
         Vector3 playerLastPosition = new Vector3((float)Math.Round(_target.x, 1), (float)Math.Round(_target.y, 0), (float)Math.Round(_target.z, 1));
         if (bulletPosition == playerLastPosition)
         {
-            DestroyBullet();
+            DisableBullet();
         }
     }
-    private void DestroyBullet() 
+    private void DisableBullet() 
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

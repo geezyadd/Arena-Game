@@ -27,7 +27,7 @@ public class PlayerBulletController : MonoBehaviour
         statsRicochetAddedEvent.AddListener(listener);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(DestroyBulletAfter10Seconds());
         StatsRicochetAddedEventManager.AddEventInvoker(this);
@@ -58,7 +58,7 @@ public class PlayerBulletController : MonoBehaviour
         }
         else if(_isRicochet && _ricochetTarget == null) 
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
     private void ChanceRicochet() 
@@ -97,7 +97,7 @@ public class PlayerBulletController : MonoBehaviour
                 }
                 if (!_isRicochet)
                 {
-                    Destroy(gameObject);
+                    gameObject.SetActive(false);
                 }
             }
             else if(_ricochetCounter >= 1) 
@@ -108,20 +108,20 @@ public class PlayerBulletController : MonoBehaviour
                 }
                 _isRicochet = false;
                 _bulletRB.useGravity = true;
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
             else 
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }
     IEnumerator DestroyBulletAfter10Seconds()
     {
         yield return new WaitForSeconds(10);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         statsRicochetAddedEvent.RemoveAllListeners();
     }

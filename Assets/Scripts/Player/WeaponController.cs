@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 public class WeaponController : MonoBehaviour
 {
@@ -9,7 +11,10 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private GameObject _bulletPrephab;
     [SerializeField] private GameObject _bulletSpawnPoint;
     [SerializeField] private float _bulletDamage;
+    [SerializeField] private EnemySpawner _enemySpawner;
     private GameObject[] _allEnemys;
+    [SerializeField] private List<GameObject> _playerBulletPool = new List<GameObject>();
+
 
     private void Start()
     {
@@ -35,12 +40,8 @@ public class WeaponController : MonoBehaviour
     {
         if (_inputReader.Ultimate && PlayerStats.Instance.GetIsUltimateReady())
         {
-            _allEnemys = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach (GameObject enemys in _allEnemys)
-            {
-                Destroy(enemys);
-                ultimateStrengthReset.Invoke();
-            }
+            _enemySpawner.DisableAllActiveEnemies();
+            ultimateStrengthReset.Invoke();
         }
     }
 
@@ -58,9 +59,26 @@ public class WeaponController : MonoBehaviour
 
     private void BulletInstantiate()
     {
-        GameObject bullet = Instantiate(_bulletPrephab, _bulletSpawnPoint.transform.position, Quaternion.identity);
+        GameObject bullet = GetPlayeBullet(_bulletPrephab);
         PlayerBulletController bulletController = bullet.GetComponent<PlayerBulletController>();
         bulletController.SetBulletDamage(_bulletDamage);
+    }
+    private GameObject GetPlayeBullet(GameObject bulletPrefab)
+    {
+        GameObject pooledBullet = _playerBulletPool.Find(enemy => enemy.activeSelf == false && enemy.CompareTag(bulletPrefab.tag));
+
+        if (pooledBullet == null)
+        {
+            pooledBullet = Instantiate(bulletPrefab, _bulletSpawnPoint.transform.position, Quaternion.identity);
+            _playerBulletPool.Add(pooledBullet);
+            
+        }
+        if(pooledBullet != null)
+        {
+            pooledBullet.SetActive(true);
+            pooledBullet.transform.position = _bulletSpawnPoint.transform.position;
+        }
+        return pooledBullet;
     }
     private void OnDestroy()
     {

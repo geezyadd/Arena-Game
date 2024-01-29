@@ -10,6 +10,7 @@ namespace BlueEnemy
         private GameObject _player;
         private NavMeshAgent _blueEnemy;
         [SerializeField] private GameObject _bulletSpawnPoint;
+        
         private void Start()
         {
             _player = GameObject.Find("Player");
@@ -21,6 +22,7 @@ namespace BlueEnemy
             BlueEnemyMovement();
             EventBulletVision();
         }
+        
 
         private bool BlueVisionChecker()
         {

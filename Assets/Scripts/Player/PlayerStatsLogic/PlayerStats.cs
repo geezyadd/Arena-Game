@@ -8,6 +8,8 @@ public class PlayerStats : MonoBehaviour, IDamagable, IStrengthDamageble
     private bool _isTakeDamage = false;
     private bool _isPlayerDead = false;
     private float _killsCounter = 0;
+
+    
     public float GetKillsCounter() 
     {
         return _killsCounter;
@@ -45,6 +47,7 @@ public class PlayerStats : MonoBehaviour, IDamagable, IStrengthDamageble
     public bool GetIsPlayerDead() { return _isPlayerDead; }
     private void Death()
     {
+        
         _isPlayerDead = true;
     }
     private void Start()
@@ -116,5 +119,4 @@ public class PlayerStats : MonoBehaviour, IDamagable, IStrengthDamageble
             _descriptor.Strength += 10f;
         }
     }
-    
 }

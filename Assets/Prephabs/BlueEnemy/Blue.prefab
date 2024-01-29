@@ -178,6 +178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   "_\u0441urrentHealth": 100
   _bounty: 50
+  _health: 100
 --- !u!1 &4509049376397068288
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,13 +5,13 @@ using UnityEngine.Events;
 public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable, IBounty
 {
     StatsAddedEvent statsAddedEvent = new StatsAddedEvent();
-    [SerializeField] private float _rrentHealth;
+    private float _ﾑ「rrentHealth;
     [SerializeField] private float _bounty;
-    public event Action OnEnemyDestroyed;
+    [SerializeField] private float _health;
     public bool TakeDamage(float damageAmount)
     {
-        _rrentHealth -= damageAmount;
-        if (_rrentHealth <= 0)
+        _ﾑ「rrentHealth -= damageAmount;
+        if (_ﾑ「rrentHealth <= 0)
         {
             return true;
         }
@@ -21,9 +21,14 @@ public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable, IBounty
     {
         statsAddedEvent.AddListener(listener);
     }
+    private void OnEnable()
+    {
+        _ﾑ「rrentHealth = _health;
+    }
     private void Start()
     {
         StatsEventManager.AddEventInvoker(this);
+        _ﾑ「rrentHealth = _health;
     }
     private void Update()
     {
@@ -31,20 +36,18 @@ public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable, IBounty
     }
     private void HealthChecker() 
     {
-        if(_rrentHealth < 0 || _rrentHealth == 0) 
+        if(_ﾑ「rrentHealth < 0 || _ﾑ「rrentHealth == 0) 
         {
             Death();
         }
     }
     private void Death() 
     {
-        //OnEnemyDestroyed?.Invoke();
         statsAddedEvent?.Invoke(_bounty);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
-        OnEnemyDestroyed?.Invoke();
         statsAddedEvent.RemoveAllListeners();
     }
    
