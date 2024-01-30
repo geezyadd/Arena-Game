@@ -4938,6 +4938,8 @@ MonoBehaviour:
   _bulletPrephab: {fileID: 109075917860864247, guid: f7a0b25cea6b15a4bba8887d9743fc91, type: 3}
   _bulletSpawnPoint: {fileID: 336797366}
   _bulletDamage: 50
+  _enemySpawner: {fileID: 1715952048}
+  _playerBulletPool: []
 --- !u!114 &1375209287
 MonoBehaviour:
   m_ObjectHideFlags: 0

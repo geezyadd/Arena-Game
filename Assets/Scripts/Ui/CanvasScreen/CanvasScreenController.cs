@@ -36,6 +36,7 @@ public class CanvasScreenController : MonoBehaviour
             ChangeText();
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
+            Time.timeScale = 0f;
         }
     }
     private void ChangeText() 
