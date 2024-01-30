@@ -21,7 +21,6 @@ public class TeleportOnPlayArea : MonoBehaviour
             Instance = this;
         }
     }
-
     private Vector3 GetRandomPointFarFromEnemies(float searchRadius)
     {
         NavMeshHit hit;

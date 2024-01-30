@@ -8,8 +8,6 @@ public class PlayerStats : MonoBehaviour, IDamagable, IStrengthDamageble
     private bool _isTakeDamage = false;
     private bool _isPlayerDead = false;
     private float _killsCounter = 0;
-
-    
     public float GetKillsCounter() 
     {
         return _killsCounter;

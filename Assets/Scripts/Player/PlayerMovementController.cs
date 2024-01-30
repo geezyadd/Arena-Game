@@ -11,20 +11,16 @@ public class PlayerMovementController : MonoBehaviour
     private ExternalDevicesInputReader _inputReader;
     private Rigidbody _playerRB;
     private Vector3 _movementDirection;
-
     private void Start()
     {
         _inputReader = GetComponent<ExternalDevicesInputReader>();
         _playerRB = GetComponent<Rigidbody>();
     }
-    
-
     private void FixedUpdate()
     {
         Movement();
         MovementDirection();
     }
-    
     private void Movement()
     {
         _playerRB.MovePosition(transform.position + (_playerAccelerationSpeed * Time.deltaTime * (_movementDirection)));

@@ -16,8 +16,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int _enemyCounter = 0;
     [SerializeField] private int _maxEnemyInScene;
     [SerializeField] private List<GameObject> _enemyPool = new List<GameObject>();
-
-    
     public void DisableAllActiveEnemies()
     {
         foreach (GameObject enemy in _enemyPool)
@@ -33,7 +31,6 @@ public class EnemySpawner : MonoBehaviour
         _navMeshSurface = FindObjectOfType<NavMeshSurface>();
         StartCoroutine(SpawnEnemies());
     }
-
     private IEnumerator SpawnEnemies()
     {
         while (true)
@@ -67,7 +64,6 @@ public class EnemySpawner : MonoBehaviour
         }
         return pooledEnemy;
     }
-
     private void Update()
     {
         _enemyCounter = CountActiveEnemies(_enemyPool);
@@ -87,9 +83,6 @@ public class EnemySpawner : MonoBehaviour
 
         return activeCount;
     }
-
-    
-
     private void SpawnEnemy(GameObject enemyPrefab, int ratio)
     {
         for (int i = 0; i < ratio; i++)
@@ -99,7 +92,6 @@ public class EnemySpawner : MonoBehaviour
         }
         
     }
-
     private Vector3 GetRandomSpawnPoint()
     {
         NavMeshHit hit;
@@ -114,7 +106,6 @@ public class EnemySpawner : MonoBehaviour
                 break;
             }
         }
-
         return hit.position;
     }
     

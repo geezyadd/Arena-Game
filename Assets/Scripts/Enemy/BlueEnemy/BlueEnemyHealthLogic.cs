@@ -50,5 +50,4 @@ public class BlueEnemyHealthLogic : MonoBehaviour, IDamagable, IBounty
     {
         statsAddedEvent.RemoveAllListeners();
     }
-   
 }

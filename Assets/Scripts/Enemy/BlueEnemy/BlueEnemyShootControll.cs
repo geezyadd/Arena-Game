@@ -11,7 +11,6 @@ namespace BlueEnemy
         private bool _isPlayerInVision;
         private bool _isFiring = false;
         [SerializeField] private List<GameObject> _blueEnemyBulletPool = new List<GameObject>();
-
         private void Start()
         {
             BlueEnemyController.BlueEnemyVisionEvent += IsPlayerInVisionSet;
@@ -20,7 +19,6 @@ namespace BlueEnemy
         {
             Shoot();
         }
-
         private void IsPlayerInVisionSet(bool value) 
         {
             if(value == true) { _isPlayerInVision = true; }

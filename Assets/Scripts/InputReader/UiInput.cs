@@ -13,7 +13,6 @@ public class UiInput : MonoBehaviour
     private void FixedUpdate()
     {
         JoystickInputSeter();
-        
     }
     private void JoystickInputSeter() 
     {
@@ -22,8 +21,7 @@ public class UiInput : MonoBehaviour
     }
     private float NormalizedInput(float value) 
     {
-        float deadZone = 0.1f; // Устанавливаем "мертвую зону" для джойстика
-
+        float deadZone = 0.1f; 
         if (Mathf.Abs(value) > deadZone)
         {
             if (value > 0f)
@@ -35,7 +33,6 @@ public class UiInput : MonoBehaviour
                 return -1f;
             }
         }
-
         return 0f;
     }
 }

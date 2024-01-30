@@ -26,7 +26,6 @@ public class PlayerBulletController : MonoBehaviour
     {
         statsRicochetAddedEvent.AddListener(listener);
     }
-
     private void OnEnable()
     {
         StartCoroutine(DestroyBulletAfter10Seconds());
@@ -49,7 +48,6 @@ public class PlayerBulletController : MonoBehaviour
     }
     private void RicochetMove() 
     {
-
         if (_isRicochet && _ricochetTarget != null)
         {
             float step = _ricochetSpeed * Time.deltaTime;
@@ -72,7 +70,6 @@ public class PlayerBulletController : MonoBehaviour
             _chanceRicochet = 0.3f;
         }
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))

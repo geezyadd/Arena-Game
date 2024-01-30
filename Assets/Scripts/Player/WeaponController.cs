@@ -14,20 +14,16 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private EnemySpawner _enemySpawner;
     private GameObject[] _allEnemys;
     [SerializeField] private List<GameObject> _playerBulletPool = new List<GameObject>();
-
-
     private void Start()
     {
         _inputReader = GetComponent<ExternalDevicesInputReader>();
     }
     private bool _isFiring = false; 
-
     void Update()
     {
         Fire();
         Ultimate();
     }
-
     private void Fire()
     {
         if (_inputReader.Attack && !_isFiring)
@@ -44,7 +40,6 @@ public class WeaponController : MonoBehaviour
             ultimateStrengthReset.Invoke();
         }
     }
-
     IEnumerator FireCoroutine(float delayTime)
     {
         while (_inputReader.Attack) 
@@ -56,7 +51,6 @@ public class WeaponController : MonoBehaviour
 
         _isFiring = false; 
     }
-
     private void BulletInstantiate()
     {
         GameObject bullet = GetPlayeBullet(_bulletPrephab);

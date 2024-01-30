@@ -10,20 +10,16 @@ namespace BlueEnemy
         private GameObject _player;
         private NavMeshAgent _blueEnemy;
         [SerializeField] private GameObject _bulletSpawnPoint;
-        
         private void Start()
         {
             _player = GameObject.Find("Player");
             _blueEnemy = GetComponent<NavMeshAgent>();
         }
-
         private void Update()
         {
             BlueEnemyMovement();
             EventBulletVision();
         }
-        
-
         private bool BlueVisionChecker()
         {
             Vector3 direction = _player.transform.position - _bulletSpawnPoint.transform.position;
@@ -39,7 +35,6 @@ namespace BlueEnemy
             }
             return false;
         }
-
         private void BlueEnemyMovement()
         {
             switch (CheckState())
@@ -57,9 +52,7 @@ namespace BlueEnemy
                     _blueEnemy.Resume();
                     break;
             }
-
             BlueVisionChecker();
-
             int CheckState()
             {
                 float distance = Vector3.Distance(_player.transform.position, transform.position);
@@ -88,7 +81,6 @@ namespace BlueEnemy
                 BlueEnemyVisionEvent(valueToSend);
             }
         }
-
         public override int GetHashCode()
         {
             return base.GetHashCode();

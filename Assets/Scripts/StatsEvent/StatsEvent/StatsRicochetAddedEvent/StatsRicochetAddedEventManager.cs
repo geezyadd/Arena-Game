@@ -4,7 +4,6 @@ public static class StatsRicochetAddedEventManager
 {
     static PlayerBulletController invoker;
     static UnityAction listener;
-
     public static void AddEventInvoker(PlayerBulletController script)
     {
         invoker = script;

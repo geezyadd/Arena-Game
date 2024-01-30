@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class BlueEnemyBulletController : MonoBehaviour
 {
-    
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private float _bulletStrengthDamage;
     [SerializeField] private Vector3 _target;
@@ -39,7 +38,7 @@ public class BlueEnemyBulletController : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.name == "Player") 
+        if (collision.collider.gameObject.CompareTag("Player")) 
         {
             collision.collider.gameObject.GetComponent<IStrengthDamageble>().TakeStrengthDamage(_bulletStrengthDamage);
             DisableBullet();

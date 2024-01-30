@@ -4,7 +4,6 @@ public static class StatsEventManager
 {
     static IBounty invoker;
     static UnityAction<float> listener;
-
     public static void AddEventInvoker(IBounty script)
     {
         invoker = script;

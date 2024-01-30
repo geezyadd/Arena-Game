@@ -8,7 +8,7 @@ public class ExternalDevicesInputReader : MonoBehaviour
     public bool Ultimate { get; private set; }
     public float GetHorizontalInput() { return _horizontalInput; }
     public float GetVerticalInput() { return _verticalInput; }
-
+    private const int ATTACK_BUTTON_ID = 0;
     private void Update()
     {
         InputSeter();
@@ -31,21 +31,19 @@ public class ExternalDevicesInputReader : MonoBehaviour
             Ultimate = false;
         }
     }
-
     private int NormalizedInput(string Direction)
     {
-        if (Input.GetAxis(Direction) > 0) { return 1; }
-        else if (Input.GetAxis(Direction) < 0) { return -1; }
+        if (Input.GetAxisRaw(Direction) > 0) { return 1; }
+        else if (Input.GetAxisRaw(Direction) < 0) { return -1; }
         else { return 0; }
     }
-
     private void MouseInput() 
     {
-        if (Input.GetMouseButton(0)) 
+        if (Input.GetMouseButton(ATTACK_BUTTON_ID)) 
         {
             Attack = true;
         }
-        if (!Input.GetMouseButton(0))
+        if (!Input.GetMouseButton(ATTACK_BUTTON_ID))
         {
             Attack = false;
         }

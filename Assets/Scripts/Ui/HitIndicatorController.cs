@@ -14,7 +14,6 @@ public class HitIndicatorController : MonoBehaviour
             StartCoroutine(HitIndicatorDisabled(1));
         }
     }
-
     private IEnumerator HitIndicatorDisabled(float delayTime)
     {
         PlayerStats.Instance.SetIsTakeDamageFalse();

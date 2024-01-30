@@ -31,13 +31,11 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
         }
         return false;
     }
-
     private void OnEnable()
     {
         _currentHealth = _health;
         _isFlying = true;
     }
-
     private void HealthChecker()
     {
         if (_currentHealth < 0 || _currentHealth == 0)
@@ -74,14 +72,12 @@ public class RedEnemyController : MonoBehaviour, IDamagable, IBounty
             
         }
     }
-    
     private void MoveToPlayer()
     {
         Vector3 direction = _player.transform.position - transform.position;
         float distanceThisFrame = _endFlySpeed * Time.deltaTime;
         transform.Translate(direction.normalized * distanceThisFrame, Space.World);
     }
-    
     private void StartFly() 
     {
         if (_isFlying)
